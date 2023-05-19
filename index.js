@@ -51,8 +51,31 @@ async function run() {
         },
       };
 
-      const result = await toysCollection.findOne(query, options)
-      res.send(result)
+      const result = await toysCollection.findOne(query, options);
+      res.send(result);
+    });
+
+    app.get("/toys/category/:category", async (req, res) => {
+      const category = req.params.category;
+      const query = {
+        subCategory: category,
+      };
+
+      const options = {
+        projection: {
+          image: 1,
+          name: 1,
+          price: 1,
+          description: 1,
+          seller: 1,
+          quantity: 1,
+          rating: 1,
+          subCategory: 1,
+        },
+      };
+
+      const result = await toysCollection.find(query, options).toArray();
+      res.send(result);
     });
 
     // Send a ping to confirm a successful connection
