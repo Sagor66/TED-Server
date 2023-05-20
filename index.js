@@ -30,7 +30,7 @@ async function run() {
     const newToysCollection = client.db("toyMarketplace").collection("newToys")
 
     app.get("/toys", async (req, res) => {
-      const cursor = toysCollection.find();
+      const cursor = toysCollection.find().limit(20);
       const result = await cursor.toArray();
       res.send(result);
     });
@@ -80,9 +80,14 @@ async function run() {
     });
 
     app.get("/newToys", async (req, res) => {
-      const cursor = newToysCollection.find();
+      console.log(req.query.email)
+      let query = {}
+      if (req.query?.email) {
+        query = { email: req.query.email }
+      }
+      const cursor = newToysCollection.find(query);
       const result = await cursor.toArray();
-      // console.log(result)
+      console.log(result)
       res.send(result);
     });
 
@@ -90,6 +95,7 @@ async function run() {
       const newToy = req.body
       console.log(newToy)
       const result = await newToysCollection.insertOne(newToy)
+      // console.log(result)
       res.send(result)
     })
 
@@ -125,7 +131,7 @@ async function run() {
         $set: {
           price: updatedToy.price,
           quantity: updatedToy.quantity,
-          details: updatedToy.details,
+          description: updatedToy.description,
         },
       }
 
